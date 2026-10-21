@@ -192,9 +192,27 @@
   .sk-prose :where(pre) {
     padding: var(--sk-space-4);
     overflow-x: auto;
+    border: 1px solid var(--sk-line);
     border-radius: var(--sk-radius);
-    background: var(--sk-code-bg) !important;
+    background: var(--sk-pre-bg) !important;
     line-height: 1.5;
+  }
+
+  /* Highlighted code (Shiki, configured by the integration): pick the palette for the
+     current theme from the variables Shiki writes on each token. */
+  .astro-code,
+  .astro-code span {
+    color: var(--shiki-light, inherit);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme='light']) .astro-code,
+    :root:not([data-theme='light']) .astro-code span {
+      color: var(--shiki-dark, inherit);
+    }
+  }
+  :root[data-theme='dark'] .astro-code,
+  :root[data-theme='dark'] .astro-code span {
+    color: var(--shiki-dark, inherit);
   }
 
   .sk-prose :where(table) {

@@ -5,6 +5,8 @@ import { resolveConfig } from './config.js';
 const VIRTUAL_ID = 'virtual:site-kit/config';
 const RESOLVED_ID = '\0' + VIRTUAL_ID;
 const PACKAGE = '@davidebisio/site-kit';
+// Every token color in these two reaches 4.5:1 on --sk-pre-bg in its theme.
+const SHIKI_THEMES = { light: 'github-light-high-contrast', dark: 'github-dark-default' };
 
 /**
  * @param {import('./config').SiteKitConfig} userConfig
@@ -16,10 +18,17 @@ export default function siteKit(userConfig) {
   return {
     name: PACKAGE,
     hooks: {
-      'astro:config:setup': ({ updateConfig, addMiddleware }) => {
+      'astro:config:setup': ({ config: astroConfig, updateConfig, addMiddleware }) => {
         if (config.mdLinks) {
           // Fix relative links to .md files in rendered pages (docs reused from a repo).
           addMiddleware({ entrypoint: new URL('./middleware.js', import.meta.url), order: 'post' });
+        }
+        // Code blocks follow the site theme: Shiki writes both palettes as CSS variables
+        // (no inline colors) and base.css picks one per data-theme. Skipped when the site
+        // configures its own Shiki theme.
+        const shiki = astroConfig.markdown?.shikiConfig;
+        if (!shiki || (shiki.theme === 'github-dark' && !Object.keys(shiki.themes ?? {}).length)) {
+          updateConfig({ markdown: { shikiConfig: { themes: SHIKI_THEMES, defaultColor: false } } });
         }
         updateConfig({
           vite: {

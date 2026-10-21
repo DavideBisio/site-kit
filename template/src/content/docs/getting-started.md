@@ -7,6 +7,11 @@ order: 1
 Replace this page with real setup steps. Every Markdown file in `src/content/docs/`
 becomes a page under `/docs/`, listed in the sidebar.
 
+```bash
+# Preview the site locally
+npm install && npm run dev
+```
+
 ## Frontmatter
 
 | Field         | Purpose                                         |

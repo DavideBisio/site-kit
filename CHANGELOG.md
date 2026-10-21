@@ -1,5 +1,14 @@
 # Changelog
 
+## v0.1.1 — 2026-10-21
+
+- Code blocks follow the site theme. Shiki previously rendered `github-dark` token colors
+  on the light code background, so some tokens were unreadable in light mode. The
+  integration now configures dual themes (`github-light-high-contrast` /
+  `github-dark-default`, both AA on the new `--sk-pre-bg` token), unless the site sets its
+  own Shiki theme.
+- New token `--sk-pre-bg`; code blocks in `.sk-prose` get a hairline border.
+
 ## v0.1.0 — 2026-10-21
 
 First release, extracted from davidebisio.github.io.

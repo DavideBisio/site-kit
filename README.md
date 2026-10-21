@@ -178,11 +178,17 @@ layer override it without `!important`.
 
 Semantic: `--sk-bg`, `--sk-surface`, `--sk-surface-2`, `--sk-ink`, `--sk-muted`,
 `--sk-line`, `--sk-accent` (fills) / `--sk-accent-ink`, `--sk-link`, `--sk-highlight`,
-`--sk-secondary`, `--sk-code-bg`, `--sk-good`, `--sk-bad`, `--sk-focus`. Brand:
+`--sk-secondary`, `--sk-code-bg` (inline code), `--sk-pre-bg` (code blocks), `--sk-good`,
+`--sk-bad`, `--sk-focus`. Brand:
 `--sk-slate`, `--sk-crimson`, `--sk-amber`, `--sk-offwhite`, `--sk-teal`. Plus type
 (`--sk-font-sans`, `--sk-text-*`), spacing (`--sk-space-1…8`), layout
 (`--sk-width-narrow`, `--sk-width-wide`) and shape (`--sk-radius`, `--sk-shadow`).
 Text colors meet WCAG AA (4.5:1) on both backgrounds in both themes.
+
+Markdown code blocks follow the site theme: the integration sets Shiki to
+`github-light-high-contrast` / `github-dark-default` with `defaultColor: false`, and
+`base.css` picks the palette per `data-theme`. Every token color in those themes reaches
+4.5:1 on `--sk-pre-bg`. A site that sets its own `markdown.shikiConfig` theme keeps it.
 
 ### `<site-bar>` for vanilla apps
 

@@ -70,6 +70,8 @@ function build(siteRoot) {
   check(/<h1[^>]*>Getting started<\/h1>/.test(doc) && doc.includes('Configuration'), 'docs page renders with sidebar');
   check(doc.includes('/edit/main/site/src/content/docs/getting-started.md'), 'edit link points at the source file');
   check(ref.includes('Reference') && ref.includes('Previous'), 'sidebar group and pager');
+  const pre = doc.match(/<pre class="astro-code[\s\S]*?<\/pre>/)?.[0] ?? '';
+  check(pre.includes('--shiki-dark:') && !/[;"]color:#/.test(pre), 'code blocks carry both palettes, no inline colors');
   check(existsSync(join(dist, 'docs', 'index.html')) && existsSync(join(dist, '404.html')), 'docs index and 404 exist');
   check(read(join(dist, 'app', 'index.html')).includes('<site-bar'), 'app copied to /app/');
   const workflow = read(join(repo, '.github', 'workflows', 'pages.yml'));

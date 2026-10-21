@@ -35,7 +35,8 @@
     --sk-link: #a63a32; /* crimson darkened to 4.5:1+ on --sk-bg */
     --sk-highlight: var(--sk-amber);
     --sk-secondary: #36706f; /* teal darkened for text */
-    --sk-code-bg: #e9e3d8;
+    --sk-code-bg: #e9e3d8; /* inline code */
+    --sk-pre-bg: #fbf8f3; /* code blocks: lighter than --sk-code-bg so every highlight color reaches 4.5:1 */
     --sk-good: #1d7550;
     --sk-bad: #b8402f;
     --sk-focus: var(--sk-amber);
@@ -90,6 +91,7 @@
       --sk-highlight: var(--sk-amber);
       --sk-secondary: #7fbcbb;
       --sk-code-bg: #15181e;
+      --sk-pre-bg: #15181e;
       --sk-good: #5cc69c;
       --sk-bad: #f08a78;
       --sk-shadow: 0 1px 3px rgb(0 0 0 / 40%);
@@ -110,6 +112,7 @@
     --sk-highlight: var(--sk-amber);
     --sk-secondary: #7fbcbb;
     --sk-code-bg: #15181e;
+    --sk-pre-bg: #15181e;
     --sk-good: #5cc69c;
     --sk-bad: #f08a78;
     --sk-shadow: 0 1px 3px rgb(0 0 0 / 40%);
