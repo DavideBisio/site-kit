@@ -1,5 +1,25 @@
 # Changelog
 
+## v0.1.2 — 2026-10-21
+
+Match the hub (davidebisio.github.io) more closely, and make long docs pages readable.
+
+- Header: the logo sits inside the owner link, as on the hub; hub spacing (16px block
+  padding, 12px logo gap, 24px between links); active link weight 500; the `/` separator
+  uses `--sk-muted` so it stays visible on the lighter line color.
+- Tokens: `--sk-line` is the hub's slate-200 (light) and teal (dark); `--sk-surface` is
+  white in light; `--sk-muted` is the hub's slate-600 (light) and a teal lightened to AA
+  (dark); `--sk-link` (light) is crimson darkened only as far as AA needs; body
+  `--sk-leading` 1.5. New tokens `--sk-radius-md` and `--sk-btn-line`.
+- Buttons: hub geometry (rounded-md, 8px/16px padding, 14px medium); the secondary
+  button is outlined instead of filled.
+- Links: no underline outside prose (underline on hover), as on the hub; prose links
+  keep a faint underline. Footer links lose their underline.
+- Main padding 2.5rem, as on the hub.
+- `.sk-prose`: a rule above every `h2`, h1/h2/h3 at 2.25/1.5/1.125rem, more space
+  between paragraphs and list items, quieter inline code (0.85em, wraps).
+- `<site-bar>` fallbacks and spacing follow the same values.
+
 ## v0.1.1 — 2026-10-21
 
 - Code blocks follow the site theme. Shiki previously rendered `github-dark` token colors
