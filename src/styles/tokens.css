@@ -25,15 +25,16 @@
 
     /* Semantic colors: light */
     --sk-bg: var(--sk-offwhite);
-    --sk-surface: #fbf8f3;
+    --sk-surface: #ffffff;
     --sk-surface-2: #e9e3d8;
     --sk-ink: var(--sk-slate);
-    --sk-muted: #59606b;
-    --sk-line: #d9d1c3;
+    --sk-muted: #45556c; /* the hub's slate-600 */
+    --sk-line: #e2e8f0; /* the hub's slate-200 */
     --sk-accent: var(--sk-crimson); /* fills: buttons, badges */
     --sk-accent-ink: #ffffff; /* text on --sk-accent */
-    --sk-link: #a63a32; /* crimson darkened to 4.5:1+ on --sk-bg */
+    --sk-link: #b8443b; /* crimson darkened just enough for 4.5:1 on --sk-bg */
     --sk-highlight: var(--sk-amber);
+    --sk-btn-line: #cad5e2; /* the hub's slate-300 */
     --sk-secondary: #36706f; /* teal darkened for text */
     --sk-code-bg: #e9e3d8; /* inline code */
     --sk-pre-bg: #fbf8f3; /* code blocks: lighter than --sk-code-bg so every highlight color reaches 4.5:1 */
@@ -50,7 +51,7 @@
     --sk-text-lg: 1.25rem;
     --sk-text-xl: 1.75rem;
     --sk-text-2xl: clamp(2rem, 1.4rem + 3vw, 3rem);
-    --sk-leading: 1.6;
+    --sk-leading: 1.5;
     --sk-leading-tight: 1.15;
 
     /* Spacing */
@@ -72,6 +73,7 @@
     /* Shape */
     --sk-radius: 0.5rem;
     --sk-radius-sm: 0.25rem;
+    --sk-radius-md: 0.375rem;
     --sk-radius-pill: 999px;
     --sk-shadow: 0 1px 3px rgb(30 35 42 / 12%);
   }
@@ -83,12 +85,13 @@
       --sk-surface: #282e37;
       --sk-surface-2: #323a45;
       --sk-ink: var(--sk-offwhite);
-      --sk-muted: #9ab9b8;
-      --sk-line: #3b4552;
+      --sk-muted: #62a6a5; /* teal lightened to 4.5:1 on --sk-surface */
+      --sk-line: var(--sk-teal);
       --sk-accent: var(--sk-crimson);
       --sk-accent-ink: #ffffff;
       --sk-link: var(--sk-amber);
       --sk-highlight: var(--sk-amber);
+      --sk-btn-line: var(--sk-teal);
       --sk-secondary: #7fbcbb;
       --sk-code-bg: #15181e;
       --sk-pre-bg: #15181e;
@@ -104,12 +107,13 @@
     --sk-surface: #282e37;
     --sk-surface-2: #323a45;
     --sk-ink: var(--sk-offwhite);
-    --sk-muted: #9ab9b8;
-    --sk-line: #3b4552;
+    --sk-muted: #62a6a5; /* teal lightened to 4.5:1 on --sk-surface */
+    --sk-line: var(--sk-teal);
     --sk-accent: var(--sk-crimson);
     --sk-accent-ink: #ffffff;
     --sk-link: var(--sk-amber);
     --sk-highlight: var(--sk-amber);
+    --sk-btn-line: var(--sk-teal);
     --sk-secondary: #7fbcbb;
     --sk-code-bg: #15181e;
     --sk-pre-bg: #15181e;
