@@ -1,0 +1,80 @@
+---
+// Numbered two-column cards. Ported from davidebisio.github.io; an odd last card spans both columns.
+import { formatInline } from '../../lib/inline.js';
+
+interface Item {
+  title: string;
+  body: string;
+}
+
+interface Props {
+  items: Item[];
+}
+
+const { items } = Astro.props;
+const lastSpansFull = items.length % 2 === 1;
+---
+
+<div class="sk-card-grid">
+  {
+    items.map((item, i) => (
+      <div class:list={['card', lastSpansFull && i === items.length - 1 && 'full']}>
+        <div class="head">
+          <span class="num">{i + 1}</span>
+          <span class="title">{item.title}</span>
+        </div>
+        <p set:html={formatInline(item.body)} />
+      </div>
+    ))
+  }
+</div>
+
+<style>
+  @layer site-kit {
+    .sk-card-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: var(--sk-space-4);
+      margin: var(--sk-space-5) 0;
+    }
+    @media (min-width: 640px) {
+      .sk-card-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+      .full {
+        grid-column: span 2;
+      }
+    }
+    .card {
+      padding: var(--sk-space-4);
+      border: 1px solid var(--sk-line);
+      border-radius: var(--sk-radius);
+      background: var(--sk-surface);
+    }
+    .head {
+      display: flex;
+      align-items: center;
+      gap: var(--sk-space-2);
+    }
+    .num {
+      display: grid;
+      place-items: center;
+      flex-shrink: 0;
+      width: 1.5rem;
+      height: 1.5rem;
+      border-radius: 50%;
+      background: color-mix(in srgb, var(--sk-highlight) 22%, transparent);
+      color: var(--sk-link);
+      font-size: var(--sk-text-xs);
+      font-weight: 700;
+    }
+    .title {
+      font-weight: 600;
+    }
+    p {
+      margin: var(--sk-space-2) 0 0;
+      color: var(--sk-muted);
+      font-size: var(--sk-text-sm);
+    }
+  }
+</style>

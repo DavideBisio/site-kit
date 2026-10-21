@@ -1,0 +1,77 @@
+---
+// A shell command with a Copy button.  <Command code="npm run dev" />
+interface Props {
+  code: string;
+  /** Prefix shown (not copied) before each line. Empty string to hide. */
+  prompt?: string;
+}
+const { code, prompt = '$' } = Astro.props;
+const lines = code.trim().split('\n');
+---
+
+<div class="sk-command">
+  <pre><code>{lines.map((line) => (
+    <span class="line">{prompt && !line.trimStart().startsWith('#') && <span class="prompt" aria-hidden="true">{prompt} </span>}{line}{'\n'}</span>
+  ))}</code></pre>
+  <button type="button" class="copy" data-sk-copy={code.trim()}>Copy</button>
+</div>
+
+<script>
+  document.querySelectorAll<HTMLButtonElement>('[data-sk-copy]').forEach((button) => {
+    button.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(button.dataset.skCopy ?? '');
+        button.textContent = 'Copied';
+      } catch {
+        button.textContent = 'Press Ctrl+C';
+      }
+      setTimeout(() => (button.textContent = 'Copy'), 1600);
+    });
+  });
+</script>
+
+<style>
+  @layer site-kit {
+    .sk-command {
+      display: flex;
+      align-items: flex-start;
+      gap: var(--sk-space-2);
+      margin: 0 0 var(--sk-space-4);
+      padding: var(--sk-space-2);
+      border-radius: var(--sk-radius);
+      background: var(--sk-code-bg);
+    }
+    pre {
+      flex: 1;
+      min-width: 0;
+      margin: 0;
+      padding: var(--sk-space-2);
+      overflow-x: auto;
+      border-radius: var(--sk-radius);
+      background: var(--sk-code-bg);
+      font-size: var(--sk-text-sm);
+      line-height: 1.6;
+    }
+    .line {
+      white-space: pre;
+    }
+    .prompt {
+      color: var(--sk-muted);
+      user-select: none;
+    }
+    .copy {
+      flex-shrink: 0;
+      min-height: 2rem;
+      padding: 0 var(--sk-space-3);
+      border: 1px solid var(--sk-line);
+      border-radius: var(--sk-radius-sm);
+      background: var(--sk-surface);
+      color: var(--sk-ink);
+      font: 600 var(--sk-text-xs) / 1 var(--sk-font-sans);
+      cursor: pointer;
+    }
+    .copy:hover {
+      border-color: var(--sk-link);
+    }
+  }
+</style>

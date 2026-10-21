@@ -1,0 +1,67 @@
+---
+import config from 'virtual:site-kit/config';
+
+interface Props {
+  wide?: boolean;
+}
+const { wide = false } = Astro.props;
+const year = new Date().getFullYear();
+const links = [
+  ...(config.hub ? [] : [{ label: config.owner.name, url: config.owner.url }]),
+  ...(config.repo ? [{ label: 'Source', url: config.repo }] : []),
+  ...config.owner.links,
+];
+---
+
+<footer class="sk-footer">
+  <div class="sk-container sk-footer-inner" data-wide={wide || undefined}>
+    <p>&copy; {year} {config.owner.name}<slot /></p>
+    <ul>
+      {
+        links.map((link) => (
+          <li>
+            <a href={link.url} {...(/^https?:/.test(link.url) ? { rel: 'noopener noreferrer' } : {})}>
+              {link.label}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</footer>
+
+<style>
+  @layer site-kit {
+    .sk-footer {
+      margin-top: var(--sk-space-8);
+      border-top: 1px solid var(--sk-line);
+      color: var(--sk-muted);
+      font-size: var(--sk-text-sm);
+    }
+    .sk-footer-inner {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--sk-space-3) var(--sk-space-5);
+      padding-block: var(--sk-space-6);
+    }
+    p {
+      margin: 0;
+    }
+    ul {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--sk-space-4);
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+    a {
+      color: inherit;
+    }
+    a:hover {
+      color: var(--sk-link);
+    }
+  }
+</style>

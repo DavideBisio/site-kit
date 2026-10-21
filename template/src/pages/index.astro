@@ -1,0 +1,38 @@
+---
+import { BaseLayout, Hero, Section, FeatureGrid, Steps, Callout } from '@davidebisio/site-kit';
+import config from 'virtual:site-kit/config';
+---
+
+<BaseLayout title={config.title}>
+  <Hero
+    title={config.title}
+    lede={config.description}
+    status="experimental"
+    actions={[
+      { label: 'Get started', href: '/docs/getting-started/', primary: true },
+      { label: 'View source', href: config.repo ?? '/' },
+    ]}
+  />
+
+  <Section title="What it does" intro="Replace these cards with the project's main features.">
+    <FeatureGrid
+      items={[
+        { icon: '⚡', title: 'First feature', body: 'One or two sentences on what it does and why it matters.' },
+        { icon: '🔒', title: 'Second feature', body: 'Supports `code`, **bold** and [links](/docs/).' },
+        { icon: '📦', title: 'Third feature', body: 'Cards wrap to one column on phones.' },
+      ]}
+    />
+  </Section>
+
+  <Section title="Quick start">
+    <Steps
+      items={[
+        { title: 'Install', body: 'What someone needs before starting.', command: 'git clone https://github.com/DavideBisio/{{repo}}' },
+        { title: 'Run it', command: 'npm start' },
+      ]}
+    />
+    <Callout tone="privacy" title="Your data stays with you">
+      <p>Say plainly where the user's data goes, or that it goes nowhere.</p>
+    </Callout>
+  </Section>
+</BaseLayout>

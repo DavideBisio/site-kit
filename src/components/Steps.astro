@@ -1,0 +1,78 @@
+---
+// Numbered how-to steps, each with an optional copyable command.
+//   <Steps items={[{ title: 'Install', body: 'Needs Python 3.12+.', command: 'pip install …' }]} />
+import { formatInline } from '../lib/inline.js';
+import Command from './Command.astro';
+
+interface Step {
+  title: string;
+  body?: string;
+  command?: string;
+}
+
+interface Props {
+  items: Step[];
+}
+
+const { items } = Astro.props;
+---
+
+<ol class="sk-steps">
+  {
+    items.map((step) => (
+      <li>
+        <h3>{step.title}</h3>
+        {step.body && <p set:html={formatInline(step.body)} />}
+        {step.command && <Command code={step.command} />}
+      </li>
+    ))
+  }
+</ol>
+
+<style>
+  @layer site-kit {
+    .sk-steps {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      counter-reset: step;
+    }
+    li {
+      position: relative;
+      padding: 0 0 var(--sk-space-6) 3rem;
+      counter-increment: step;
+    }
+    li::before {
+      content: counter(step);
+      position: absolute;
+      left: 0;
+      top: -0.1rem;
+      display: grid;
+      place-items: center;
+      width: 2rem;
+      height: 2rem;
+      border-radius: 50%;
+      background: var(--sk-accent);
+      color: var(--sk-accent-ink);
+      font-weight: 700;
+      font-size: var(--sk-text-sm);
+    }
+    li:not(:last-child)::after {
+      content: '';
+      position: absolute;
+      left: calc(1rem - 1px);
+      top: 2.2rem;
+      bottom: 0.3rem;
+      width: 2px;
+      background: var(--sk-line);
+    }
+    h3 {
+      margin: 0 0 var(--sk-space-2);
+      font-size: var(--sk-text-md);
+    }
+    p {
+      margin: 0 0 var(--sk-space-3);
+      color: var(--sk-muted);
+    }
+  }
+</style>

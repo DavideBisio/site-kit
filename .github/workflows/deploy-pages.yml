@@ -1,0 +1,103 @@
+# Reusable: build a project's Astro site and deploy it to GitHub Pages.
+#
+# Caller (what `site-kit init` writes to .github/workflows/pages.yml):
+#
+#   on: { push: { branches: [main] }, workflow_dispatch: {} }
+#   permissions: { contents: read, pages: write, id-token: write }
+#   concurrency: { group: pages, cancel-in-progress: false }
+#   jobs:
+#     pages:
+#       uses: DavideBisio/site-kit/.github/workflows/deploy-pages.yml@v0.1.0
+#       with:
+#         site-dir: site
+#         prebuild: python tools/build.py && npm --prefix site run app:copy
+#
+# One-time repo setting: Settings → Pages → Source: GitHub Actions.
+name: Deploy Pages (reusable)
+
+on:
+  workflow_call:
+    inputs:
+      site-dir:
+        description: Folder containing the Astro site's package.json ("." for a site at the repo root).
+        type: string
+        default: site
+      node-version:
+        type: string
+        default: '22'
+      python-version:
+        description: Set to install Python before the prebuild step (e.g. for an app built by a Python script).
+        type: string
+        default: ''
+      prebuild:
+        description: Shell command run from the repo root after installing the site's dependencies and before building it, e.g. to build an app and copy it into site/public/app.
+        type: string
+        default: ''
+      build-command:
+        type: string
+        default: npm run build
+      output-dir:
+        description: Build output, relative to site-dir.
+        type: string
+        default: dist
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Setup Node (with npm cache)
+        if: hashFiles(format('{0}/package-lock.json', inputs.site-dir)) != ''
+        uses: actions/setup-node@v7
+        with:
+          node-version: ${{ inputs.node-version }}
+          cache: npm
+          cache-dependency-path: ${{ inputs.site-dir }}/package-lock.json
+
+      - name: Setup Node
+        if: hashFiles(format('{0}/package-lock.json', inputs.site-dir)) == ''
+        uses: actions/setup-node@v7
+        with:
+          node-version: ${{ inputs.node-version }}
+
+      - name: Setup Python
+        if: inputs.python-version != ''
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ inputs.python-version }}
+
+      - name: Install site dependencies
+        working-directory: ${{ inputs.site-dir }}
+        run: |
+          if [ -f package-lock.json ]; then npm ci; else npm install --no-audit --no-fund; fi
+
+      - name: Prebuild
+        if: inputs.prebuild != ''
+        run: ${{ inputs.prebuild }}
+
+      - name: Build site
+        working-directory: ${{ inputs.site-dir }}
+        run: ${{ inputs.build-command }}
+
+      - uses: actions/configure-pages@v6
+
+      - uses: actions/upload-pages-artifact@v5
+        with:
+          path: ${{ inputs.site-dir }}/${{ inputs.output-dir }}
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v5

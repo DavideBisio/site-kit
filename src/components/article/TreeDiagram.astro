@@ -1,0 +1,44 @@
+---
+// A folder/file tree in a card. Ported from davidebisio.github.io.
+import TreeList, { type TreeNode } from './TreeList.astro';
+
+interface Props {
+  root: string;
+  rootNote?: string;
+  nodes: TreeNode[];
+}
+
+const { root, rootNote, nodes } = Astro.props;
+---
+
+<div class="sk-tree">
+  <div class="root">
+    {root} {rootNote && <span class="note">{rootNote}</span>}
+  </div>
+  <TreeList nodes={nodes} />
+</div>
+
+<style>
+  @layer site-kit {
+    .sk-tree {
+      margin: var(--sk-space-5) 0;
+      padding: var(--sk-space-5);
+      overflow-x: auto;
+      border: 1px solid var(--sk-line);
+      border-radius: var(--sk-radius);
+      background: var(--sk-surface);
+      font-family: var(--sk-font-mono);
+      font-size: var(--sk-text-sm);
+      line-height: 1.7;
+    }
+    .root {
+      font-weight: 600;
+    }
+    .note {
+      color: var(--sk-muted);
+      font-family: var(--sk-font-sans);
+      font-size: var(--sk-text-xs);
+      font-weight: 400;
+    }
+  }
+</style>

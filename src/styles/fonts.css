@@ -1,0 +1,7 @@
+/*
+ * Self-hosted Inter (variable). Resolved by the bundler (Vite/Astro), so the site makes
+ * no request to a font CDN — required by budget-planner's no-remote-assets rule.
+ * Vanilla pages without a bundler can skip this file: the font stack falls back to the
+ * system UI font.
+ */
+@import '@fontsource-variable/inter/wght.css';

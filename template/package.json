@@ -1,0 +1,19 @@
+{
+  "name": "{{repo}}-site",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "check": "astro check",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "@davidebisio/site-kit": "github:DavideBisio/site-kit#{{kitVersion}}",
+    "astro": "^7.4.1"
+  }
+}

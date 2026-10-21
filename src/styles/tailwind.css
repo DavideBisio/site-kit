@@ -1,0 +1,42 @@
+/*
+ * Tailwind 4 bridge. In a Tailwind site's global CSS:
+ *
+ *   @import '@davidebisio/site-kit/styles/index.css';
+ *   @import 'tailwindcss';
+ *   @import '@davidebisio/site-kit/styles/tailwind.css';
+ *
+ * Utilities such as bg-bg, bg-surface, text-ink, text-muted, border-line, text-link and
+ * bg-accent read the kit tokens, so they switch with the theme on their own and rarely
+ * need a dark: variant. dark: still works and follows data-theme.
+ */
+@custom-variant dark (&:where([data-theme='dark'], [data-theme='dark'] *));
+
+@theme inline {
+  --font-sans: var(--sk-font-sans);
+  --font-mono: var(--sk-font-mono);
+
+  --color-bg: var(--sk-bg);
+  --color-surface: var(--sk-surface);
+  --color-surface-2: var(--sk-surface-2);
+  --color-ink: var(--sk-ink);
+  --color-muted: var(--sk-muted);
+  --color-line: var(--sk-line);
+  --color-accent: var(--sk-accent);
+  --color-accent-ink: var(--sk-accent-ink);
+  --color-link: var(--sk-link);
+  --color-highlight: var(--sk-highlight);
+  --color-secondary: var(--sk-secondary);
+  --color-code: var(--sk-code-bg);
+  --color-good: var(--sk-good);
+  --color-bad: var(--sk-bad);
+
+  --color-slate-base: var(--sk-slate);
+  --color-crimson: var(--sk-crimson);
+  --color-amber: var(--sk-amber);
+  --color-offwhite: var(--sk-offwhite);
+  --color-teal: var(--sk-teal);
+
+  --radius-sk: var(--sk-radius);
+  --container-narrow: var(--sk-width-narrow);
+  --container-wide: var(--sk-width-wide);
+}

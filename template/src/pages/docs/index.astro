@@ -1,0 +1,21 @@
+---
+import { getCollection } from 'astro:content';
+import { BaseLayout, Section, FeatureGrid } from '@davidebisio/site-kit';
+import { docsNav } from '@davidebisio/site-kit/content';
+
+const entries = await getCollection('docs');
+const descriptions = new Map(entries.map((e) => [e.id, e.data.description]));
+// FeatureGrid adds the base path to hrefs itself.
+const nav = docsNav(entries, (e) => `/docs/${e.id}/`);
+---
+
+<BaseLayout title="Docs" wide>
+  <h1>Documentation</h1>
+  {
+    nav.map((group) => (
+      <Section title={group.label || undefined}>
+        <FeatureGrid items={group.items.map((item) => ({ title: item.title, body: descriptions.get(item.id), href: item.href }))} />
+      </Section>
+    ))
+  }
+</BaseLayout>

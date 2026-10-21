@@ -1,0 +1,228 @@
+/*
+ * site-kit base: a light reset, page defaults, layout helpers and .sk-prose for
+ * rendered Markdown. Import after tokens.css (index.css does both).
+ */
+@layer site-kit {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+  }
+
+  body {
+    margin: 0;
+    background: var(--sk-bg);
+    color: var(--sk-ink);
+    font: var(--sk-text-md) / var(--sk-leading) var(--sk-font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  img,
+  svg,
+  video {
+    max-width: 100%;
+    height: auto;
+  }
+
+  [hidden] {
+    display: none !important;
+  }
+
+  a {
+    color: var(--sk-link);
+    text-underline-offset: 0.18em;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--sk-focus);
+    outline-offset: 2px;
+    border-radius: var(--sk-radius-sm);
+  }
+
+  ::selection {
+    background: var(--sk-amber);
+    color: var(--sk-slate);
+  }
+
+  code,
+  kbd,
+  pre,
+  samp {
+    font-family: var(--sk-font-mono);
+    font-size: 0.92em;
+  }
+
+  /* ---- Layout helpers ---- */
+
+  .sk-container {
+    width: 100%;
+    max-width: var(--sk-width-narrow);
+    margin-inline: auto;
+    padding-inline: var(--sk-gutter);
+  }
+
+  .sk-container[data-wide] {
+    max-width: var(--sk-width-wide);
+  }
+
+  .sk-stack > * + * {
+    margin-top: var(--sk-space-5);
+  }
+
+  .sk-visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+
+  .sk-skip-link {
+    position: absolute;
+    left: var(--sk-space-4);
+    top: -100px;
+    z-index: 10;
+    padding: var(--sk-space-2) var(--sk-space-4);
+    background: var(--sk-surface);
+    border-radius: var(--sk-radius);
+  }
+
+  .sk-skip-link:focus {
+    top: var(--sk-space-2);
+  }
+
+  /* ---- Buttons ---- */
+
+  .sk-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--sk-space-2);
+    min-height: var(--sk-tap);
+    padding: 0 var(--sk-space-5);
+    border: 1px solid var(--sk-line);
+    border-radius: var(--sk-radius);
+    background: var(--sk-surface);
+    color: var(--sk-ink);
+    font: 600 var(--sk-text-sm) / 1 var(--sk-font-sans);
+    text-decoration: none;
+    cursor: pointer;
+    transition: border-color 0.15s, background-color 0.15s;
+  }
+
+  .sk-btn:hover {
+    border-color: var(--sk-link);
+  }
+
+  .sk-btn[data-variant='primary'] {
+    background: var(--sk-accent);
+    border-color: var(--sk-accent);
+    color: var(--sk-accent-ink);
+  }
+
+  .sk-btn[data-variant='primary']:hover {
+    filter: brightness(1.08);
+  }
+
+  /* ---- Prose: rendered Markdown / MDX ---- */
+
+  .sk-prose {
+    line-height: 1.7;
+  }
+
+  .sk-prose > :first-child {
+    margin-top: 0;
+  }
+
+  .sk-prose :where(h1, h2, h3, h4) {
+    line-height: var(--sk-leading-tight);
+    text-wrap: balance;
+    letter-spacing: -0.01em;
+  }
+
+  .sk-prose :where(h1) {
+    font-size: var(--sk-text-2xl);
+    margin: 0 0 var(--sk-space-5);
+  }
+
+  .sk-prose :where(h2) {
+    font-size: var(--sk-text-xl);
+    margin: var(--sk-space-7) 0 var(--sk-space-4);
+  }
+
+  .sk-prose :where(h3) {
+    font-size: var(--sk-text-lg);
+    margin: var(--sk-space-6) 0 var(--sk-space-3);
+  }
+
+  .sk-prose :where(p, ul, ol, blockquote, pre, table, figure) {
+    margin: 0 0 var(--sk-space-4);
+  }
+
+  .sk-prose :where(ul, ol) {
+    padding-left: 1.4em;
+  }
+
+  .sk-prose :where(li) + :where(li) {
+    margin-top: var(--sk-space-1);
+  }
+
+  .sk-prose :where(li)::marker {
+    color: var(--sk-muted);
+  }
+
+  .sk-prose :where(blockquote) {
+    padding-left: var(--sk-space-4);
+    border-left: 3px solid var(--sk-secondary);
+    color: var(--sk-muted);
+  }
+
+  .sk-prose :where(:not(pre) > code) {
+    padding: 0.1em 0.35em;
+    border-radius: var(--sk-radius-sm);
+    background: var(--sk-code-bg);
+  }
+
+  .sk-prose :where(pre) {
+    padding: var(--sk-space-4);
+    overflow-x: auto;
+    border-radius: var(--sk-radius);
+    background: var(--sk-code-bg) !important;
+    line-height: 1.5;
+  }
+
+  .sk-prose :where(table) {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: var(--sk-text-sm);
+    display: block;
+    overflow-x: auto;
+  }
+
+  .sk-prose :where(th, td) {
+    padding: var(--sk-space-2) var(--sk-space-3);
+    border-bottom: 1px solid var(--sk-line);
+    text-align: left;
+    vertical-align: top;
+  }
+
+  .sk-prose :where(th) {
+    font-weight: 600;
+  }
+
+  .sk-prose :where(hr) {
+    margin: var(--sk-space-7) 0;
+    border: 0;
+    border-top: 1px solid var(--sk-line);
+  }
+
+  .sk-prose :where(img) {
+    border-radius: var(--sk-radius);
+  }
+}

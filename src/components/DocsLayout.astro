@@ -1,0 +1,246 @@
+---
+// Documentation page: sidebar of all pages, the rendered Markdown, an "On this page"
+// list and previous/next links. On phones the sidebar folds into a disclosure.
+//
+//   const nav = docsNav(await getCollection('docs'), (e) => withBase(`/docs/${e.id}/`));
+//   <DocsLayout title={…} nav={nav} headings={headings} editUrl={…}><Content /></DocsLayout>
+import BaseLayout from './BaseLayout.astro';
+import type { DocsNavGroup } from '../lib/content.js';
+
+interface Props {
+  title: string;
+  description?: string;
+  nav: DocsNavGroup[];
+  headings?: { depth: number; slug: string; text: string }[];
+  /** Link to the source file on GitHub ("Edit this page"). */
+  editUrl?: string;
+  /** Show the title as an <h1>; set false when the Markdown starts with its own "# …". */
+  showTitle?: boolean;
+}
+
+const { title, description, nav, headings = [], editUrl, showTitle = true } = Astro.props;
+
+const norm = (p: string) => (p.endsWith('/') ? p : p + '/');
+const current = norm(Astro.url.pathname);
+const flat = nav.flatMap((g) => g.items);
+const index = flat.findIndex((item) => norm(item.href) === current);
+const prev = index > 0 ? flat[index - 1] : undefined;
+const next = index >= 0 && index < flat.length - 1 ? flat[index + 1] : undefined;
+const toc = headings.filter((h) => h.depth === 2 || h.depth === 3);
+---
+
+<BaseLayout title={title} description={description} type="article" wide>
+  <div class="sk-docs">
+    <aside class="sidebar" aria-label="Documentation">
+      <details class="sidebar-fold" open>
+        <summary>Pages</summary>
+        {
+          nav.map((group) => (
+            <div class="group">
+              {group.label && <p class="group-label">{group.label}</p>}
+              <ul>
+                {group.items.map((item) => (
+                  <li>
+                    <a href={item.href} aria-current={norm(item.href) === current ? 'page' : undefined}>
+                      {item.title}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))
+        }
+      </details>
+    </aside>
+
+    <article class="content">
+      <div class="sk-prose">
+        {showTitle && <h1>{title}</h1>}
+        <slot />
+      </div>
+      {
+        (prev || next || editUrl) && (
+          <nav class="pager" aria-label="Pages">
+            {prev ? (
+              <a href={prev.href} class="pager-link">
+                <span>Previous</span>
+                {prev.title}
+              </a>
+            ) : (
+              <span />
+            )}
+            {next && (
+              <a href={next.href} class="pager-link next">
+                <span>Next</span>
+                {next.title}
+              </a>
+            )}
+          </nav>
+        )
+      }
+      {
+        editUrl && (
+          <p class="edit">
+            <a href={editUrl} target="_blank" rel="noopener noreferrer">
+              Edit this page on GitHub
+            </a>
+          </p>
+        )
+      }
+    </article>
+
+    {
+      toc.length > 1 && (
+        <aside class="toc" aria-label="On this page">
+          <p class="group-label">On this page</p>
+          <ul>
+            {toc.map((h) => (
+              <li data-depth={h.depth}>
+                <a href={`#${h.slug}`}>{h.text}</a>
+              </li>
+            ))}
+          </ul>
+        </aside>
+      )
+    }
+  </div>
+</BaseLayout>
+
+<script>
+  // Start the sidebar folded on narrow screens; it stays open on desktop.
+  const fold = document.querySelector<HTMLDetailsElement>('.sidebar-fold');
+  if (fold && matchMedia('(max-width: 899px)').matches) fold.open = false;
+</script>
+
+<style>
+  @layer site-kit {
+    .sk-docs {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      gap: var(--sk-space-6);
+    }
+    @media (min-width: 900px) {
+      .sk-docs {
+        grid-template-columns: 14rem minmax(0, 1fr);
+      }
+    }
+    @media (min-width: 1200px) {
+      .sk-docs {
+        grid-template-columns: 14rem minmax(0, 1fr) 12rem;
+      }
+    }
+
+    .sidebar,
+    .toc {
+      font-size: var(--sk-text-sm);
+    }
+    summary {
+      min-height: var(--sk-tap);
+      display: flex;
+      align-items: center;
+      padding-inline: var(--sk-space-3);
+      border: 1px solid var(--sk-line);
+      border-radius: var(--sk-radius);
+      background: var(--sk-surface);
+      font-weight: 600;
+      cursor: pointer;
+    }
+    details[open] summary {
+      margin-bottom: var(--sk-space-3);
+    }
+    @media (min-width: 900px) {
+      .sidebar,
+      .toc {
+        position: sticky;
+        top: var(--sk-space-5);
+        align-self: start;
+        max-height: calc(100vh - 2 * var(--sk-space-5));
+        overflow-y: auto;
+      }
+      summary {
+        display: none;
+      }
+    }
+    .group + .group {
+      margin-top: var(--sk-space-5);
+    }
+    .group-label {
+      margin: 0 0 var(--sk-space-2);
+      color: var(--sk-muted);
+      font-size: var(--sk-text-xs);
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+    ul {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+    .sidebar a,
+    .toc a {
+      display: block;
+      padding: var(--sk-space-1) var(--sk-space-2);
+      border-left: 2px solid transparent;
+      color: var(--sk-muted);
+      text-decoration: none;
+    }
+    .sidebar a {
+      padding-block: var(--sk-space-2);
+    }
+    .sidebar a:hover,
+    .toc a:hover {
+      color: var(--sk-link);
+    }
+    .sidebar a[aria-current='page'] {
+      border-left-color: var(--sk-accent);
+      color: var(--sk-ink);
+      font-weight: 600;
+    }
+    .toc li[data-depth='3'] a {
+      padding-left: var(--sk-space-5);
+    }
+    .toc {
+      display: none;
+    }
+    @media (min-width: 1200px) {
+      .toc {
+        display: block;
+      }
+    }
+
+    .pager {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--sk-space-4);
+      margin-top: var(--sk-space-7);
+    }
+    .pager-link {
+      display: flex;
+      flex-direction: column;
+      gap: var(--sk-space-1);
+      padding: var(--sk-space-4);
+      border: 1px solid var(--sk-line);
+      border-radius: var(--sk-radius);
+      color: var(--sk-ink);
+      font-weight: 600;
+      text-decoration: none;
+    }
+    .pager-link:hover {
+      border-color: var(--sk-link);
+    }
+    .pager-link span {
+      color: var(--sk-muted);
+      font-size: var(--sk-text-xs);
+      font-weight: 500;
+    }
+    .pager-link.next {
+      grid-column: 2;
+      text-align: right;
+    }
+    .edit {
+      margin-top: var(--sk-space-5);
+      font-size: var(--sk-text-sm);
+    }
+  }
+</style>

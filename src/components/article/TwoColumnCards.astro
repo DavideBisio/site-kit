@@ -1,0 +1,113 @@
+---
+// Two contrasting columns of cards (e.g. problems vs. fixes). Ported from davidebisio.github.io.
+import { formatInline } from '../../lib/inline.js';
+
+interface Item {
+  title: string;
+  body: string;
+  issueNumber?: number;
+  issueUrl?: string;
+}
+
+interface Column {
+  label: string;
+  color: 'crimson' | 'teal';
+  icon: string;
+  items: Item[];
+}
+
+interface Props {
+  left: Column;
+  right: Column;
+}
+
+const { left, right } = Astro.props;
+---
+
+<div class="sk-two-col">
+  {
+    [left, right].map((column) => (
+      <div data-color={column.color}>
+        <div class="label">
+          <span class="icon">{column.icon}</span>
+          {column.label}
+        </div>
+        <div class="items">
+          {column.items.map((item) => (
+            <div class="card">
+              <div class="title">
+                {item.title}{' '}
+                {item.issueNumber && item.issueUrl && <a href={item.issueUrl}>#{item.issueNumber}</a>}
+              </div>
+              <p set:html={formatInline(item.body)} />
+            </div>
+          ))}
+        </div>
+      </div>
+    ))
+  }
+</div>
+
+<style>
+  @layer site-kit {
+    .sk-two-col {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: var(--sk-space-4);
+      margin: var(--sk-space-5) 0;
+    }
+    @media (min-width: 768px) {
+      .sk-two-col {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+    [data-color='crimson'] {
+      --col: var(--sk-crimson);
+      --col-text: var(--sk-link);
+    }
+    [data-color='teal'] {
+      --col: var(--sk-teal);
+      --col-text: var(--sk-secondary);
+    }
+    .label {
+      display: flex;
+      align-items: center;
+      gap: var(--sk-space-2);
+      margin-bottom: var(--sk-space-2);
+      color: var(--col-text);
+      font-size: var(--sk-text-sm);
+      font-weight: 600;
+    }
+    .icon {
+      display: grid;
+      place-items: center;
+      width: 1.25rem;
+      height: 1.25rem;
+      border-radius: 50%;
+      background: color-mix(in srgb, var(--col) 15%, transparent);
+      font-size: var(--sk-text-xs);
+    }
+    .items {
+      display: grid;
+      gap: var(--sk-space-3);
+    }
+    .card {
+      padding: var(--sk-space-4);
+      border-left: 4px solid var(--col);
+      border-radius: var(--sk-radius);
+      background: var(--sk-surface);
+      box-shadow: var(--sk-shadow);
+    }
+    .title {
+      font-weight: 600;
+    }
+    .title a {
+      font-weight: 400;
+    }
+    p {
+      margin: var(--sk-space-1) 0 0;
+      color: var(--sk-muted);
+      font-size: var(--sk-text-sm);
+    }
+  }
+</style>

@@ -1,0 +1,122 @@
+---
+// Project cards for the hub site, fed by loadProjects() from each repo's project.json.
+//   const projects = await loadProjects(['garmin-run-progress', 'budget-planner']);
+//   <ProjectGrid projects={projects} />
+import type { Project } from '../lib/projects.js';
+
+interface Props {
+  projects: Project[];
+}
+
+const { projects } = Astro.props;
+---
+
+<ul class="sk-projects">
+  {
+    projects.map((p) => (
+      <li class="card">
+        <div class="head">
+          <h3>
+            <a href={p.url ?? `https://github.com/${p.repo}`}>{p.name}</a>
+          </h3>
+          {p.status !== 'active' && <span class="status" data-status={p.status}>{p.status}</span>}
+        </div>
+        <p>{p.tagline}</p>
+        {p.tags.length > 0 && (
+          <ul class="tags">
+            {p.tags.map((t) => (
+              <li>{t}</li>
+            ))}
+          </ul>
+        )}
+        <a class="repo" href={`https://github.com/${p.repo}`}>
+          Source
+        </a>
+      </li>
+    ))
+  }
+</ul>
+
+<style>
+  @layer site-kit {
+    .sk-projects {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(min(100%, 17rem), 1fr));
+      gap: var(--sk-space-4);
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+    .card {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      gap: var(--sk-space-2);
+      padding: var(--sk-space-5);
+      border: 1px solid var(--sk-line);
+      border-radius: var(--sk-radius);
+      background: var(--sk-surface);
+    }
+    .card:hover {
+      border-color: var(--sk-link);
+    }
+    .head {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: var(--sk-space-2);
+    }
+    h3 {
+      margin: 0;
+      font-size: var(--sk-text-md);
+    }
+    h3 a {
+      color: inherit;
+      text-decoration: none;
+    }
+    h3 a::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+    }
+    p {
+      flex: 1;
+      margin: 0;
+      color: var(--sk-muted);
+      font-size: var(--sk-text-sm);
+    }
+    .status {
+      padding: 0.1em 0.6em;
+      border-radius: var(--sk-radius-pill);
+      background: var(--sk-highlight);
+      color: var(--sk-slate);
+      font-size: var(--sk-text-xs);
+      font-weight: 600;
+    }
+    .status[data-status='archived'] {
+      background: var(--sk-surface-2);
+      color: var(--sk-muted);
+    }
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--sk-space-1);
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+    .tags li {
+      padding: 0.1em 0.5em;
+      border-radius: var(--sk-radius-sm);
+      background: var(--sk-surface-2);
+      color: var(--sk-muted);
+      font-size: var(--sk-text-xs);
+    }
+    .repo {
+      position: relative;
+      z-index: 1;
+      align-self: flex-start;
+      font-size: var(--sk-text-sm);
+    }
+  }
+</style>

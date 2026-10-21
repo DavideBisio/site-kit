@@ -1,0 +1,58 @@
+---
+// Highlighted note.  <Callout tone="privacy" title="Your data stays here">…</Callout>
+interface Props {
+  tone?: 'note' | 'tip' | 'warning' | 'privacy';
+  title?: string;
+}
+const { tone = 'note', title } = Astro.props;
+const icons = { note: 'ℹ', tip: '✦', warning: '!', privacy: '🔒' };
+---
+
+<aside class="sk-callout" data-tone={tone}>
+  <span class="icon" aria-hidden="true">{icons[tone]}</span>
+  <div>
+    {title && <p class="title">{title}</p>}
+    <div class="body"><slot /></div>
+  </div>
+</aside>
+
+<style>
+  @layer site-kit {
+    .sk-callout {
+      --tone: var(--sk-secondary);
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: var(--sk-space-3);
+      margin: var(--sk-space-5) 0;
+      padding: var(--sk-space-4);
+      border: 1px solid var(--sk-line);
+      border-left: 4px solid var(--tone);
+      border-radius: var(--sk-radius);
+      background: var(--sk-surface);
+    }
+    [data-tone='tip'] {
+      --tone: var(--sk-highlight);
+    }
+    [data-tone='warning'] {
+      --tone: var(--sk-bad);
+    }
+    [data-tone='privacy'] {
+      --tone: var(--sk-good);
+    }
+    .icon {
+      color: var(--tone);
+      font-weight: 700;
+      line-height: 1.6;
+    }
+    .title {
+      margin: 0 0 var(--sk-space-1);
+      font-weight: 600;
+    }
+    .body :global(> :first-child) {
+      margin-top: 0;
+    }
+    .body :global(> :last-child) {
+      margin-bottom: 0;
+    }
+  }
+</style>

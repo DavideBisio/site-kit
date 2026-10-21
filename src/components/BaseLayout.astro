@@ -1,0 +1,52 @@
+---
+// The page shell every site uses: head, skip link, header, <main>, footer.
+//   <BaseLayout title="Docs" description="…" wide><h1>…</h1></BaseLayout>
+// Slots: default (page body), "head" (extra <head> tags), "footer" (extra footer text).
+import config from 'virtual:site-kit/config';
+import Head, { type Props as HeadProps } from './Head.astro';
+import Header from './Header.astro';
+import Footer from './Footer.astro';
+import '../styles/index.css';
+
+interface Props extends HeadProps {
+  /** Wide container (72rem) instead of the reading width (48rem). */
+  wide?: boolean;
+  /** Skip the container around the slot, for full-bleed pages that lay out their own. */
+  bare?: boolean;
+}
+
+const { wide = false, bare = false, ...head } = Astro.props;
+---
+
+<!doctype html>
+<html lang={config.lang}>
+  <head>
+    <Head {...head} />
+    <slot name="head" />
+  </head>
+  <body class="sk-page">
+    <a class="sk-skip-link" href="#main">Skip to content</a>
+    <Header wide={wide} />
+    <main id="main" class:list={[!bare && 'sk-container sk-main']} data-wide={wide || undefined}>
+      <slot />
+    </main>
+    <Footer wide={wide}><slot name="footer" /></Footer>
+  </body>
+</html>
+
+<style>
+  @layer site-kit {
+    .sk-page {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      min-height: 100dvh;
+    }
+    main {
+      flex: 1;
+    }
+    .sk-main {
+      padding-block: var(--sk-space-7) 0;
+    }
+  }
+</style>

@@ -1,0 +1,67 @@
+---
+interface Props {
+  class?: string;
+}
+const { class: className } = Astro.props;
+---
+
+<button type="button" class:list={['sk-theme-toggle', className]} data-sk-theme-toggle aria-label="Switch to dark theme">
+  <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+    <circle cx="12" cy="12" r="4"></circle>
+    <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path>
+  </svg>
+  <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"></path>
+  </svg>
+</button>
+
+<script>
+  function label(button: Element) {
+    const dark = document.documentElement.dataset.theme === 'dark';
+    button.setAttribute('aria-label', dark ? 'Switch to light theme' : 'Switch to dark theme');
+  }
+  document.querySelectorAll('[data-sk-theme-toggle]').forEach((button) => {
+    label(button);
+    button.addEventListener('click', () => {
+      const next = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
+      document.documentElement.dataset.theme = next;
+      try {
+        localStorage.setItem('theme', next);
+      } catch {}
+      document.querySelectorAll('[data-sk-theme-toggle]').forEach(label);
+    });
+  });
+</script>
+
+<style>
+  @layer site-kit {
+    .sk-theme-toggle {
+      display: inline-grid;
+      place-items: center;
+      width: 2.25rem;
+      height: 2.25rem;
+      padding: 0;
+      border: 0;
+      border-radius: var(--sk-radius);
+      background: none;
+      color: var(--sk-muted);
+      cursor: pointer;
+    }
+    .sk-theme-toggle:hover {
+      color: var(--sk-link);
+    }
+    svg {
+      width: 1.1rem;
+      height: 1.1rem;
+    }
+    .sun {
+      display: none;
+    }
+    :global([data-theme='dark']) .sun {
+      display: block;
+    }
+    :global([data-theme='dark']) .moon {
+      display: none;
+    }
+  }
+</style>

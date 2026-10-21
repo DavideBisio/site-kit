@@ -1,0 +1,44 @@
+---
+// Recursive list used by TreeDiagram. Ported from davidebisio.github.io.
+import { formatInline } from '../../lib/inline.js';
+
+export interface TreeNode {
+  label: string;
+  note?: string;
+  children?: TreeNode[];
+}
+
+interface Props {
+  nodes: TreeNode[];
+}
+
+const { nodes } = Astro.props;
+---
+
+<ul class="sk-tree-list">
+  {
+    nodes.map((node) => (
+      <li>
+        <span set:html={formatInline(node.label)} />
+        {node.note && <span class="note" set:html={` ${formatInline(node.note)}`} />}
+        {node.children && <Astro.self nodes={node.children} />}
+      </li>
+    ))
+  }
+</ul>
+
+<style>
+  @layer site-kit {
+    .sk-tree-list {
+      margin: var(--sk-space-1) 0 var(--sk-space-2) var(--sk-space-1);
+      padding-left: var(--sk-space-4);
+      border-left: 1px solid var(--sk-line);
+      list-style: none;
+    }
+    .note {
+      color: var(--sk-muted);
+      font-family: var(--sk-font-sans);
+      font-size: var(--sk-text-xs);
+    }
+  }
+</style>

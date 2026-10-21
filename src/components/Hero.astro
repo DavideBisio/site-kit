@@ -1,0 +1,125 @@
+---
+// Project landing hero: status badge, name, one-line pitch, actions.
+//   <Hero title="Run Progress Lab" lede="…" status="beta"
+//         actions={[{ label: 'Open the app', href: '/app/', primary: true }, { label: 'Docs', href: '/docs/' }]} />
+// Slot "media" shows a screenshot or illustration beside the text on wide screens.
+import { withBase, isExternal } from '../lib/url.js';
+import { formatInline } from '../lib/inline.js';
+
+interface Action {
+  label: string;
+  href: string;
+  primary?: boolean;
+}
+
+interface Props {
+  title: string;
+  lede?: string;
+  eyebrow?: string;
+  status?: 'active' | 'beta' | 'experimental' | 'archived';
+  actions?: Action[];
+}
+
+const { title, lede, eyebrow, status, actions = [] } = Astro.props;
+const hasMedia = Astro.slots.has('media');
+---
+
+<section class:list={['sk-hero', hasMedia && 'with-media']}>
+  <div class="text">
+    {
+      (eyebrow || (status && status !== 'active')) && (
+        <p class="eyebrow">
+          {eyebrow}
+          {status && status !== 'active' && <span class="status" data-status={status}>{status}</span>}
+        </p>
+      )
+    }
+    <h1>{title}</h1>
+    {lede && <p class="lede" set:html={formatInline(lede)} />}
+    <slot />
+    {
+      actions.length > 0 && (
+        <div class="actions">
+          {actions.map((a) => {
+            const href = withBase(a.href);
+            return (
+              <a
+                class="sk-btn"
+                data-variant={a.primary ? 'primary' : undefined}
+                href={href}
+                {...(isExternal(href) ? { rel: 'noopener noreferrer' } : {})}
+              >
+                {a.label}
+              </a>
+            );
+          })}
+        </div>
+      )
+    }
+  </div>
+  {hasMedia && <div class="media"><slot name="media" /></div>}
+</section>
+
+<style>
+  @layer site-kit {
+    .sk-hero {
+      display: grid;
+      gap: var(--sk-space-6);
+      padding-block: var(--sk-space-5) var(--sk-space-7);
+    }
+    @media (min-width: 900px) {
+      .with-media {
+        grid-template-columns: 1.1fr 1fr;
+        align-items: center;
+      }
+    }
+    .eyebrow {
+      display: flex;
+      align-items: center;
+      gap: var(--sk-space-2);
+      margin: 0 0 var(--sk-space-3);
+      color: var(--sk-secondary);
+      font-size: var(--sk-text-sm);
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+    .status {
+      padding: 0.1em 0.6em;
+      border-radius: var(--sk-radius-pill);
+      background: var(--sk-highlight);
+      color: var(--sk-slate);
+      font-size: var(--sk-text-xs);
+    }
+    .status[data-status='archived'] {
+      background: var(--sk-surface-2);
+      color: var(--sk-muted);
+    }
+    h1 {
+      margin: 0;
+      font-size: var(--sk-text-2xl);
+      line-height: var(--sk-leading-tight);
+      letter-spacing: -0.02em;
+      text-wrap: balance;
+    }
+    .lede {
+      max-width: 40rem;
+      margin: var(--sk-space-4) 0 0;
+      color: var(--sk-muted);
+      font-size: var(--sk-text-lg);
+      line-height: 1.5;
+    }
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--sk-space-3);
+      margin-top: var(--sk-space-6);
+    }
+    .media :global(img) {
+      display: block;
+      border: 1px solid var(--sk-line);
+      border-radius: var(--sk-radius);
+      box-shadow: var(--sk-shadow);
+    }
+  }
+</style>

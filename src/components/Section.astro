@@ -1,0 +1,40 @@
+---
+// A titled landing-page section with an optional intro.
+//   <Section title="What it shows" intro="…"><FeatureGrid items={…} /></Section>
+import { formatInline } from '../lib/inline.js';
+
+interface Props {
+  title?: string;
+  intro?: string;
+  id?: string;
+}
+
+const { title, intro, id } = Astro.props;
+const slug = id ?? title?.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+---
+
+<section class="sk-section" id={slug} aria-labelledby={title ? `${slug}-title` : undefined}>
+  {title && <h2 id={`${slug}-title`}>{title}</h2>}
+  {intro && <p class="intro" set:html={formatInline(intro)} />}
+  <slot />
+</section>
+
+<style>
+  @layer site-kit {
+    .sk-section {
+      padding-block: var(--sk-space-6);
+      border-top: 1px solid var(--sk-line);
+    }
+    h2 {
+      margin: 0 0 var(--sk-space-3);
+      font-size: var(--sk-text-xl);
+      line-height: var(--sk-leading-tight);
+      letter-spacing: -0.01em;
+    }
+    .intro {
+      max-width: 42rem;
+      margin: 0 0 var(--sk-space-5);
+      color: var(--sk-muted);
+    }
+  }
+</style>
